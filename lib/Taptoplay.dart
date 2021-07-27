@@ -1,3 +1,4 @@
+import 'package:bubbletest_project/vars.dart';
 import 'package:flutter/material.dart';
 
 class TapToPlay extends StatelessWidget {
@@ -9,6 +10,7 @@ class TapToPlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Screen.setSize(MediaQuery.of(context).size);
     return GestureDetector(
       onTap: () =>tapHandler(),
       child: Container(

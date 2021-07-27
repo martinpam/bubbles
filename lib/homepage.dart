@@ -23,12 +23,16 @@ class _HomePageState extends State<HomePage> {
 
   int currentScore = 0;
   int highScore = 0;
-  int intensity = 100;
-  static var _components = Map();
+  double speed = 50;
+  static var components = Map();
+ 
+
+
 
   void removeComponent(int points, int id) {
     setState(() {
-      _components.remove(id);
+      components.remove(id);
+      
 
       currentScore += points;
     });
@@ -44,15 +48,15 @@ class _HomePageState extends State<HomePage> {
     if (!gameHasStarted) {
       gameHasStarted = true;
 
-      if (_components.isEmpty) {
+      if (components.isEmpty) {
         //add random Components depending on current difficulty
         addComponent(
             LevelInfo.levels.entries.elementAt(level - 1).value[stage]
                 ['nrComponents'],
-            _components,
-            time);
-
+            components,
+            time, speed);
         stage++;
+       
       }
 
       //below code is executed every 5 ms
@@ -62,32 +66,32 @@ class _HomePageState extends State<HomePage> {
           (timer) {
         time += GameVariables.REFRESH_INTERVAL_IN_MILLISECONDS / 1000;
 
-        //for all components on the screen...
-        _components.forEach((key, value) {
-          //...check if component reached its target, if not, move towards target
-          if (!hasReachedTarget(value)) {
-            setState(() {
-              setPreviousToCurrent(value);
-
-              updatePositionsNew(
-                  value, calculateDistances(value), intensity, time);
-            });
-          } else {
-            //else generate new random target
-
-            setState(() {
-              getNewRandomTarget(value, time);
-            });
+        components.forEach((key, value) {
+          setState(() {
+             //start the animation if the component has reached its target
+          if (value['startAnimation'] == false && time >= (value['timeAtSpawn']+0.025)) {
+            value['startAnimation'] = true;
+          } 
+          if (time >= (value['timeAtSpawn'] + value['animationDuration'])) {
+            value['x_posSpawn'] = value['x_posTarget'];
+            value['y_posSpawn'] = value['y_posTarget'];
+            getNewRandomTarget(value, speed);
+            value['timeAtSpawn'] = time;
+            var distances = calculateDistances(value['x_posSpawn'],value['y_posSpawn'],value['x_posTarget'],value['y_posTarget']);
+           double secondsToReachTarget = getSecondsToReachTarget(distances[0], distances[1], speed);
+           value['animationDuration'] = secondsToReachTarget;  
+           
           }
+          });
         });
 
-        if (_components.isEmpty) {
+         if (components.isEmpty) {
           addComponent(
               LevelInfo.levels.entries.elementAt(level - 1).value[stage]
                   ['nrComponents'],
-              _components,
-              time);
-          intensity = LevelInfo.levels.entries.elementAt(level - 1).value[stage]
+              components,
+              time,speed);
+          speed = LevelInfo.levels.entries.elementAt(level - 1).value[stage]
               ['speed'];
           stage++;
         }
@@ -105,7 +109,7 @@ class _HomePageState extends State<HomePage> {
             flex: 20,
             child: Container(
               child: MyStack(
-                  gameHasStarted, startGame, _components, removeComponent),
+                  gameHasStarted, startGame, components, removeComponent),
             ),
           ),
         ],

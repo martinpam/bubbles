@@ -3,20 +3,21 @@ import 'package:flutter/material.dart';
 
 class MyCircle extends StatelessWidget {
   final double size;
-  final double alignment_X;
-  final double alignment_Y;
+  final entry;
   final Function tapHandler;
   final int id;
+  final bool startAnimation;
+  final double animationDurationInSeconds;
   MyCircle(
-      this.size, this.alignment_X, this.alignment_Y, this.tapHandler, this.id);
+      this.size, this.entry, this.tapHandler, this.id, this.startAnimation, this.animationDurationInSeconds);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => tapHandler(5, id),
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 0),
-        alignment: Alignment(alignment_X, alignment_Y),
+        duration: Duration(milliseconds: (animationDurationInSeconds * 1000).toInt()),
+        alignment: !startAnimation ? Alignment(entry['x_posSpawn'], entry['y_posSpawn']) :Alignment(entry['x_posTarget'], entry['y_posTarget']) ,
         child: Container(
             width: size,
             height: size,
@@ -25,9 +26,37 @@ class MyCircle extends StatelessWidget {
               shape: BoxShape.circle,
               
             ),
-            child: !GameVariables.debugIsOn ? null : Text("\n x: " + this.alignment_X.toStringAsFixed(4) + " \n y: " + this.alignment_Y.toStringAsFixed(4)),
+            child: !GameVariables.debugIsOn ? null : Text(this.id.toString()),
             ),
       ),
     );
+  }
+}
+
+
+class TargetSign extends StatelessWidget {
+  final double size;
+  final entry;
+  
+  TargetSign(
+      this.size, this.entry);
+
+  @override
+  Widget build(BuildContext context) {
+    return  AnimatedContainer(
+        duration: Duration(seconds: 0),
+        alignment: Alignment(entry['x_posTarget'], entry['y_posTarget']) ,
+        child: Container(
+            width: size,
+            height: size,
+            decoration: new BoxDecoration(
+              color: Colors.green,
+              shape: BoxShape.circle,
+              
+            ),
+            
+            ),);
+      
+    
   }
 }

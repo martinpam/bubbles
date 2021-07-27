@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bubbletest_project/vars.dart';
+
 
 class TopBar extends StatelessWidget {
   final int score;
@@ -9,8 +9,7 @@ class TopBar extends StatelessWidget {
   TopBar(this.score, this.averageSkill, {this.flex = 2});
 
   @override
-  Widget build(BuildContext context) {
-    Screen.setSize(MediaQuery.of(context).size);
+  Widget build(BuildContext context) { 
     return Expanded(
       flex: flex,
       child: Container(
