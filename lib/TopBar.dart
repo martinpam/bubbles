@@ -9,7 +9,8 @@ class TopBar extends StatelessWidget {
   TopBar(this.score, this.averageSkill, {this.flex = 2});
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
+
     return Expanded(
       flex: flex,
       child: Container(
