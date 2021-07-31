@@ -23,6 +23,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  anvil_effect:
+    git:
+      url: https://github.com/HitenDev/flutter_effects.git
+      path: flutter_effects/anvil_effect
    
 
 
@@ -33,6 +37,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+    
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

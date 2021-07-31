@@ -116,8 +116,8 @@ getNewRandomTarget(var entry, var time) {
 
 
 
-void addComponent(int nrOfComponents, var components, var timeAtSpawn) {
-  for (int i = 0; i < nrOfComponents; i++) {
+void addComponent(int nrOfCircles, var components, var timeAtSpawn, int nrOfBombs) {
+  for (int i = 0; i < nrOfCircles; i++) {
     double x_posSpawn = getRandomCoordinate();
     double y_posSpawn = getRandomCoordinate();
 
@@ -149,6 +149,42 @@ void addComponent(int nrOfComponents, var components, var timeAtSpawn) {
               'timeAtSpawn': timeAtSpawn
             });
   }
+
+   for (int i = 0; i < nrOfBombs; i++) {
+    double x_posSpawn = getRandomCoordinate();
+    double y_posSpawn = getRandomCoordinate();
+
+    bool x_isWall = Random().nextBool();
+
+    double x_posTarget =
+        x_isWall ? getRandomCoordinate(isWall: true) : getRandomCoordinate();
+    double y_posTarget =
+        x_isWall ? getRandomCoordinate() : getRandomCoordinate(isWall: true);
+    double x_posCurrent = x_posSpawn;
+    double y_posCurrent = y_posSpawn;
+    double x_posPrevious = GameVariables.OUT_OF_RANGE;
+    double y_posPrevious = GameVariables.OUT_OF_RANGE;
+
+    components.putIfAbsent(
+        IDManager.getId(),
+        () => {
+              'component': Components.Bomb,
+              'x_posSpawn':
+                  x_posSpawn, //at start the spawn is a random position on the screen, later the old target
+              'y_posSpawn': y_posSpawn,
+              'x_posTarget': x_posTarget,
+              'y_posTarget': y_posTarget,
+              'x_posCurrent': x_posCurrent,
+              'y_posCurrent': y_posCurrent,
+              'x_posPrevious':
+                  x_posPrevious, //posPrevious helps with identifying halted components in the scene
+              'y_posPrevious': y_posPrevious,
+              'timeAtSpawn': timeAtSpawn
+            });
+  }
+
+
+
 }
 
 void updatePositionsNew(
@@ -242,4 +278,37 @@ void updatePositionsNew(
 
   entry['x_posCurrent'] = x_posNew;
   entry['y_posCurrent'] = y_posNew;
+}
+
+ double calculateTimeToClear(int nrComponents, double intensity, Map components) {
+  
+  double res = 0;
+  components.forEach((key, value) {
+    if (value['component'] == Components.Circle) {
+      res+=((BASE_CIRCLE_CLEAR_TIME+intensity/100)/getMassComponentsFactor(nrComponents));
+    }
+    //TO-DO: implement other components
+   });
+ 
+  return res;
+}
+
+double getMassComponentsFactor(int nrComponents){
+  if (nrComponents < 2) return 1;
+  if (nrComponents < 4) return 1.5;
+  if (nrComponents < 6) return 2.5;
+  if (nrComponents < 8) return 3;
+  if (nrComponents < 10) return 3.5;
+  if (nrComponents < 12) return 4;
+  return nrComponents / 3;
+  
+}
+//TO-DO: adjust acc part
+double adjustSkill(averageSkill, timeToClear, roundActualClearTime,accuracy, bool bombExploded, Function setBombExplosion ) {
+  if (bombExploded) {
+    setBombExplosion(false);
+    return averageSkill - SKILL_PER_LEVEL*2.0;
+  }
+  double relativeSuccess =  timeToClear / roundActualClearTime;
+  return (averageSkill-SKILL_PER_LEVEL/2 + min(SKILL_PER_LEVEL*relativeSuccess, SKILL_PER_LEVEL) - (0.90-accuracy)*SKILL_PER_LEVEL);
 }

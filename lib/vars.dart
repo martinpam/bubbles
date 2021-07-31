@@ -4,8 +4,11 @@ enum Components {
   Circle,
   Magnet,
   BilliardBall,
+  Bomb,
   //TO-DO: add more components
 }
+
+
 
 class Screen {
    static double width = 0;
@@ -64,4 +67,24 @@ class LevelInfo {
       {'stage': 16, 'nrComponents': 5, 'speed': 110.0, 'totalDifficulty': 550},
     ]
   };
+
+  static int getNrComponentsBySkill(int skill, double challengeFactor) {
+    return BASE_NR_COMPONENTS_CIRCLE + ((skill*challengeFactor)/ SKILL_PER_CIRCLE).floor();
+  }
+  static double getSpeedBySkill(int skill, double challengeFactor, int nrComponents) {  
+    return BASE_SPEED_COMPONENTS + (skill*challengeFactor) % SKILL_PER_CIRCLE;
+  }
+
+  static int getNrBombsBySkill(int skill, double challengeFactor) {
+    return BASE_NR_COMPONENTS_BOMB + ((skill*challengeFactor)/ SKILL_PER_BOMB).floor();
+  }
 }
+
+final double BASE_CIRCLE_CLEAR_TIME = 0.8;
+final int SKILL_PER_LEVEL = 25;
+final int BASE_NR_COMPONENTS_CIRCLE = 1;
+final double BASE_SPEED_COMPONENTS = 30;
+final int SKILL_PER_CIRCLE = 50;
+final int SKILL_PER_BOMB = 150;
+final int BASE_NR_COMPONENTS_BOMB =0;
+

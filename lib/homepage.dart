@@ -17,20 +17,32 @@ class _HomePageState extends State<HomePage> {
   bool gameHasStarted = false;
   int level = 1;
   int stage = 0;
-  int averageSkill = 50;
+  int averageSkill = 0;
   double time = 0;
-  // double timeSinceLastAdd = 0;
+  double roundStartTime = 0;
 
   int currentScore = 0;
   int highScore = 0;
-  double intensity = 100;
+  double intensity = 50;
+  double timeToClear = -1;
+  int totalClicks = 0;
+  int totalClicksOnValidCircles = 0;
+  int clicksThisRound = 0;
+  int clicksOnValidCirclesThisRound = 0;
+  int nrBombs = 0;
+  bool pressable = true;
+  bool bombWasTriggered = false;
+
   static var _components = Map();
 
   void removeComponent(int points, int id) {
     setState(() {
       _components.remove(id);
 
-      currentScore += points;
+      // currentScore += points;
+
+      totalClicksOnValidCircles++;
+      clicksOnValidCirclesThisRound++;
     });
   }
 
@@ -44,15 +56,15 @@ class _HomePageState extends State<HomePage> {
     if (!gameHasStarted) {
       gameHasStarted = true;
 
-      if (_components.isEmpty) {
-        //add random Components depending on current difficulty
-        addComponent(
-            LevelInfo.levels.entries.elementAt(level - 1).value[stage]
-                ['nrComponents'],
-            _components,
-            time);
-
-        stage++;
+      if (_components.isEmpty || _components.length == nrBombs) {
+        _components.clear();
+        int nrComponents = LevelInfo.getNrComponentsBySkill(averageSkill, 1.1);
+        nrBombs = LevelInfo.getNrBombsBySkill(averageSkill, 1.1);
+        addComponent(nrComponents, _components, time, nrBombs);
+        intensity = LevelInfo.getSpeedBySkill(averageSkill, 1.1, nrComponents);
+        timeToClear =
+            calculateTimeToClear(nrComponents, intensity, _components);
+        roundStartTime = time;
       }
 
       //below code is executed every 5 ms
@@ -81,18 +93,51 @@ class _HomePageState extends State<HomePage> {
           }
         });
 
-        if (_components.isEmpty) {
-          addComponent(
-              LevelInfo.levels.entries.elementAt(level - 1).value[stage]
-                  ['nrComponents'],
-              _components,
-              time);
-          intensity = LevelInfo.levels.entries.elementAt(level - 1).value[stage]
-              ['speed'];
-          stage++;
+        if (_components.isEmpty || _components.length == nrBombs) {
+          _components.clear();
+          double roundActualClearTime = time - roundStartTime;
+          averageSkill = adjustSkill(
+                  averageSkill,
+                  timeToClear,
+                  roundActualClearTime,
+                  clicksOnValidCirclesThisRound / clicksThisRound, bombWasTriggered, setBombExplosion)
+              .toInt();
+          int nrComponents =
+              LevelInfo.getNrComponentsBySkill(averageSkill, 1.1);
+           nrBombs = LevelInfo.getNrBombsBySkill(averageSkill, 1.1);
+
+          addComponent(nrComponents, _components, time, nrBombs);
+          intensity =
+              LevelInfo.getSpeedBySkill(averageSkill, 1.1, nrComponents);
+          timeToClear =
+              calculateTimeToClear(nrComponents, intensity, _components);
+          roundStartTime = time;
+          setState(() {
+            clicksThisRound = 0;
+            clicksOnValidCirclesThisRound = 0;
+          });
         }
       });
     }
+  }
+
+  void increaseClicks() {
+    totalClicks++;
+    clicksThisRound++;
+  }
+
+  void setPressable(bool setTo) {
+    pressable = setTo;
+  }
+
+  void setBombExplosion(bool exploded) {
+    setState(() {
+      bombWasTriggered = exploded;
+      if (exploded) {
+        _components.clear();
+      }
+      
+    });
   }
 
   @override
@@ -100,12 +145,13 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Column(
         children: [
-          TopBar(currentScore, averageSkill),
+          TopBar(clicksOnValidCirclesThisRound / clicksThisRound * 100,
+              averageSkill),
           Expanded(
             flex: 20,
             child: Container(
-              child: MyStack(
-                  gameHasStarted, startGame, _components, removeComponent),
+              child: MyStack(gameHasStarted, startGame, _components,
+                  removeComponent, increaseClicks, pressable, setPressable,setBombExplosion),
             ),
           ),
         ],

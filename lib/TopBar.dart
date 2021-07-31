@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 
 class TopBar extends StatelessWidget {
-  final int score;
+  final double accuracy;
   final int averageSkill;
   final int flex;
 
-  TopBar(this.score, this.averageSkill, {this.flex = 2});
+  TopBar(this.accuracy, this.averageSkill, {this.flex = 2});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class TopBar extends StatelessWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("SCORE:",
+                    Text("ACCURACY:",
                         style: TextStyle(color: Colors.white, fontSize: 20)),
                     SizedBox(height: 3)
                   ],
@@ -48,7 +48,7 @@ class TopBar extends StatelessWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(score.toString(),
+                    Text(accuracy.isNaN ? "0 %" : accuracy.toStringAsFixed(0)+" %",
                         style: TextStyle(color: Colors.white, fontSize: 20)),
                     SizedBox(height: 3)
                   ],
