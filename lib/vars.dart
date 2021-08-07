@@ -111,13 +111,13 @@ final int BASE_NR_COMPONENTS_BOMB =0;
 final double BASE_BOMB_CLEAR_TIME = 0.5;
 
 class RoundResult{
-  int circles;
-  int bombs;
+  int nrComponents;
   double accuracy;
   int pointsEarned;
   double timeNeeded;
+  int newRating;
 
-  RoundResult(this.circles,this.bombs,this.accuracy,this.pointsEarned,this.timeNeeded);
+  RoundResult(this.nrComponents,this.accuracy,this.pointsEarned,this.timeNeeded, this.newRating);
 }
 
 

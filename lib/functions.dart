@@ -346,24 +346,12 @@ TableRow getTableRow(RoundResult result, int splitFactor,
         width: 32,
         color: useAsHeading ? Colors.amber : Colors.amberAccent,
         child: !useAsHeading
-            ? Text(result.circles.toString(),
+            ? Text(result.nrComponents.toString(),
                 style: TextStyle(fontSize: 18, decorationColor: Colors.black))
-            : Image.asset(h1),
+            : Image.asset(h1, width: 30),
       ),
     ),
-    TableCell(
-      verticalAlignment: TableCellVerticalAlignment.middle,
-      child: Container(
-        alignment: Alignment.center,
-        height: Screen.height / splitFactor,
-        width: 32,
-        color: useAsHeading ? Colors.amber : Colors.amberAccent,
-        child: !useAsHeading
-            ? Text(result.bombs.toString(),
-                style: TextStyle(fontSize: 18, decorationColor: Colors.black))
-            : Image.asset(h2),
-      ),
-    ),
+    
     TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
       child: Container(
@@ -374,7 +362,7 @@ TableRow getTableRow(RoundResult result, int splitFactor,
           child: !useAsHeading
             ? Text((result.accuracy*100).toStringAsFixed(2),
                 style: TextStyle(fontSize: 18, decorationColor: Colors.black))
-            : Image.asset(h3),
+            : Image.asset(h2),
     ),),
     TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
@@ -386,7 +374,7 @@ TableRow getTableRow(RoundResult result, int splitFactor,
           child: !useAsHeading
             ? Text(result.timeNeeded.toStringAsFixed(2),
                 style: TextStyle(fontSize: 18, decorationColor: Colors.black))
-            : Image.asset(h4),
+            : Image.asset(h3),
     ),),
     TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
@@ -398,7 +386,20 @@ TableRow getTableRow(RoundResult result, int splitFactor,
           child: !useAsHeading
             ? Text(result.pointsEarned.toString(),
                 style: TextStyle(fontSize: 18, decorationColor: Colors.black))
-            : Image.asset(h5),
+            : Image.asset(h4),
     ),),
+    TableCell(
+      verticalAlignment: TableCellVerticalAlignment.middle,
+      child: Container(
+        alignment: Alignment.center,
+        height: Screen.height / splitFactor,
+        width: 32,
+        color: useAsHeading ? Colors.amber : Colors.amberAccent,
+        child: !useAsHeading
+            ? Text(result.newRating.toString(),
+                style: TextStyle(fontSize: 18, decorationColor: Colors.black))
+            : Image.asset(h5, width: 60),
+      ),
+    ),
   ]);
 }

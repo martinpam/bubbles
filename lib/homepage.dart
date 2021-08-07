@@ -120,11 +120,11 @@ class _HomePageState extends State<HomePage> {
 
             //add RoundResult
             last10Games.add(new RoundResult(
-                nrComponents,
-                nrBombs,
+                nrComponents+nrBombs,
                 clicksOnValidCirclesThisRound / clicksThisRound,
                 averageSkill - oldAverageSkill,
-                roundActualClearTime));
+                roundActualClearTime,
+                averageSkill));
             if (last10Games.length == 10) {
               gameIsPaused = true;
             }
@@ -205,7 +205,15 @@ class _HomePageState extends State<HomePage> {
                   setBombExplosion, gameIsPaused),
             ),
           ),
-        ],
+        Container(
+            alignment: Alignment.center,
+            height: Screen.height / 14,
+            color: Colors.grey,
+            child: Text(
+                  "Advertisement",
+                  style: TextStyle(fontSize: 10, color: Colors.black),
+                )),],
+        
       ),
     );
   }
