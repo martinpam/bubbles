@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:bubbletest_project/vars.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 double getRandomCoordinate({bool isWall = false}) {
   if (!isWall) {
@@ -20,25 +22,30 @@ bool hasReachedTarget(var entry) {
   var x_posTarget = entry['x_posTarget'];
   var y_posTarget = entry['y_posTarget'];
 
-
-  if (x_posTarget == -1) { return x_posCurrent == -1;}
-  if (x_posTarget == 1) { return x_posCurrent == 1;}
-  if (y_posTarget == -1) { return y_posCurrent == -1;}
-  if (y_posTarget == 1) { return y_posCurrent == 1;}
+  if (x_posTarget == -1) {
+    return x_posCurrent == -1;
+  }
+  if (x_posTarget == 1) {
+    return x_posCurrent == 1;
+  }
+  if (y_posTarget == -1) {
+    return y_posCurrent == -1;
+  }
+  if (y_posTarget == 1) {
+    return y_posCurrent == 1;
+  }
 
   return false;
- /* bool xIsEqual = x_posCurrent == x_posPrevious;
+  /* bool xIsEqual = x_posCurrent == x_posPrevious;
   bool yIsEqual = y_posCurrent == y_posPrevious;
   bool xCurrentIsTarget = x_posCurrent == x_posTarget;
   bool yCurrentIsTarget = y_posCurrent == y_posTarget;
   return xIsEqual && yIsEqual && xCurrentIsTarget && yCurrentIsTarget;*/
-
-
 }
 
 double y_range(double speed, double x_distance, double y_distance) {
   double secondsToReachTarget =
-     getSecondsToReachTarget(x_distance, y_distance, speed);
+      getSecondsToReachTarget(x_distance, y_distance, speed);
   int intervals = (secondsToReachTarget /
           GameVariables.REFRESH_INTERVAL_IN_MILLISECONDS *
           1000)
@@ -59,7 +66,10 @@ double x_range(double speed, double x_distance, double y_distance) {
 }
 
 getSecondsToReachTarget(double x_distance, double y_distance, double speed) {
-  return hypotenuse(x_distance / Screen.height/22*20*Screen.width, y_distance) * 100 / speed;
+  return hypotenuse(
+          x_distance / Screen.height / 22 * 20 * Screen.width, y_distance) *
+      100 /
+      speed;
 }
 
 List<double> calculateDistances(var entry) {
@@ -71,7 +81,6 @@ List<double> calculateDistances(var entry) {
   var x_posTarget = entry['x_posTarget'];
   var y_posTarget = entry['y_posTarget'];
 
-
   x_distance = (x_posSpawn - x_posTarget).abs();
   y_distance = (y_posSpawn - y_posTarget).abs();
 
@@ -82,7 +91,6 @@ List<double> calculateDistances(var entry) {
 double hypotenuse(double x, double y) {
   return sqrt(pow(x, 2) + pow(y, 2));
 }
-
 
 void setPreviousToCurrent(var entry) {
   entry['x_posPrevious'] = entry['x_posCurrent'];
@@ -112,11 +120,8 @@ getNewRandomTarget(var entry, var time) {
   entry['y_posPrevious'] = GameVariables.OUT_OF_RANGE;
 }
 
-
-
-
-
-void addComponent(int nrOfCircles, var components, var timeAtSpawn, int nrOfBombs) {
+void addComponent(
+    int nrOfCircles, var components, var timeAtSpawn, int nrOfBombs) {
   for (int i = 0; i < nrOfCircles; i++) {
     double x_posSpawn = getRandomCoordinate();
     double y_posSpawn = getRandomCoordinate();
@@ -150,7 +155,7 @@ void addComponent(int nrOfCircles, var components, var timeAtSpawn, int nrOfBomb
             });
   }
 
-   for (int i = 0; i < nrOfBombs; i++) {
+  for (int i = 0; i < nrOfBombs; i++) {
     double x_posSpawn = getRandomCoordinate();
     double y_posSpawn = getRandomCoordinate();
 
@@ -182,9 +187,6 @@ void addComponent(int nrOfCircles, var components, var timeAtSpawn, int nrOfBomb
               'timeAtSpawn': timeAtSpawn
             });
   }
-
-
-
 }
 
 void updatePositionsNew(
@@ -203,9 +205,6 @@ void updatePositionsNew(
 
   double _secondsToReachTarget =
       getSecondsToReachTarget(distances[0], distances[1], intensity);
-
-
-      
 
   if (x_posCurrent < (x_posTarget - _x_range) &&
       y_posCurrent < (y_posTarget - _y_range)) {
@@ -259,13 +258,22 @@ void updatePositionsNew(
             1000 /
             GameVariables.REFRESH_INTERVAL_IN_MILLISECONDS *
             _y_range;
-
-      } else if( y_posCurrent > (y_posTarget - _y_range) &&  y_posCurrent < (y_posTarget - _y_range)) { 
-          y_posNew = y_posTarget;
-          x_posNew = x_posCurrent > (x_posTarget + _x_range) ? x_posCurrent - _x_range : x_posCurrent < (x_posTarget - _x_range) ? x_posCurrent + _x_range : x_posCurrent;
-      }  else if( x_posCurrent > (x_posTarget - _x_range) &&  x_posCurrent < (x_posTarget - _x_range)) { 
-          y_posNew = y_posCurrent > (y_posTarget + _y_range) ? y_posCurrent - _y_range : y_posCurrent < (y_posTarget - _y_range) ? y_posCurrent + _y_range : y_posCurrent;
-      x_posNew = x_posTarget;
+  } else if (y_posCurrent > (y_posTarget - _y_range) &&
+      y_posCurrent < (y_posTarget - _y_range)) {
+    y_posNew = y_posTarget;
+    x_posNew = x_posCurrent > (x_posTarget + _x_range)
+        ? x_posCurrent - _x_range
+        : x_posCurrent < (x_posTarget - _x_range)
+            ? x_posCurrent + _x_range
+            : x_posCurrent;
+  } else if (x_posCurrent > (x_posTarget - _x_range) &&
+      x_posCurrent < (x_posTarget - _x_range)) {
+    y_posNew = y_posCurrent > (y_posTarget + _y_range)
+        ? y_posCurrent - _y_range
+        : y_posCurrent < (y_posTarget - _y_range)
+            ? y_posCurrent + _y_range
+            : y_posCurrent;
+    x_posNew = x_posTarget;
     //otherwise the component is near the target, so set it to the targets coordinates
   } else if (currentTime >= timeAtSpawn + _secondsToReachTarget) {
     x_posNew = x_posTarget;
@@ -280,35 +288,117 @@ void updatePositionsNew(
   entry['y_posCurrent'] = y_posNew;
 }
 
- double calculateTimeToClear(int nrComponents, double intensity, Map components) {
-  
+double calculateTimeToClear(
+    int nrComponents, double intensity, Map components, int nrBombs) {
   double res = 0;
   components.forEach((key, value) {
     if (value['component'] == Components.Circle) {
-      res+=((BASE_CIRCLE_CLEAR_TIME+intensity/100)/getMassComponentsFactor(nrComponents));
+      res += ((BASE_CIRCLE_CLEAR_TIME + intensity / 100) /
+          getMassComponentsFactor(nrComponents));
+    }
+    if (value['component'] == Components.Bomb) {
+      res += ((BASE_BOMB_CLEAR_TIME + intensity / 100));
     }
     //TO-DO: implement other components
-   });
- 
+  });
+
   return res;
 }
 
-double getMassComponentsFactor(int nrComponents){
+double getMassComponentsFactor(int nrComponents) {
   if (nrComponents < 2) return 1;
-  if (nrComponents < 4) return 1.5;
-  if (nrComponents < 6) return 2.5;
-  if (nrComponents < 8) return 3;
-  if (nrComponents < 10) return 3.5;
-  if (nrComponents < 12) return 4;
-  return nrComponents / 3;
-  
+  if (nrComponents < 3) return 1.5;
+  if (nrComponents < 4) return 2;
+  if (nrComponents < 6) return 3;
+  if (nrComponents < 8) return 4;
+  if (nrComponents < 10) return 5;
+  if (nrComponents < 12) return 6;
+  return nrComponents / 2;
 }
+
 //TO-DO: adjust acc part
-double adjustSkill(averageSkill, timeToClear, roundActualClearTime,accuracy, bool bombExploded, Function setBombExplosion ) {
+double adjustSkill(averageSkill, timeToClear, roundActualClearTime, accuracy,
+    bool bombExploded, Function setBombExplosion) {
   if (bombExploded) {
     setBombExplosion(false);
-    return averageSkill - SKILL_PER_LEVEL*2.0;
+    return averageSkill - SKILL_PER_LEVEL * 2.0;
   }
-  double relativeSuccess =  timeToClear / roundActualClearTime;
-  return (averageSkill-SKILL_PER_LEVEL/2 + min(SKILL_PER_LEVEL*relativeSuccess, SKILL_PER_LEVEL) - (0.90-accuracy)*SKILL_PER_LEVEL);
+  double relativeSuccess = timeToClear / roundActualClearTime;
+  return (averageSkill -
+      SKILL_PER_LEVEL / 2 +
+      min(SKILL_PER_LEVEL * relativeSuccess, SKILL_PER_LEVEL) -
+      (0.90 - accuracy) * SKILL_PER_LEVEL);
+}
+
+TableRow getTableRow(RoundResult result, int splitFactor,
+    {bool useAsHeading = false,
+    String h1 = "",
+    String h2 = "",
+    String h3 = "",
+    String h4 = "",
+    String h5 = ""}) {
+  return TableRow(children: [
+    TableCell(
+      verticalAlignment: TableCellVerticalAlignment.middle,
+      child: Container(
+        alignment: Alignment.center,
+        height: Screen.height / splitFactor,
+        width: 32,
+        color: useAsHeading ? Colors.amber : Colors.amberAccent,
+        child: !useAsHeading
+            ? Text(result.circles.toString(),
+                style: TextStyle(fontSize: 18, decorationColor: Colors.black))
+            : Image.asset(h1),
+      ),
+    ),
+    TableCell(
+      verticalAlignment: TableCellVerticalAlignment.middle,
+      child: Container(
+        alignment: Alignment.center,
+        height: Screen.height / splitFactor,
+        width: 32,
+        color: useAsHeading ? Colors.amber : Colors.amberAccent,
+        child: !useAsHeading
+            ? Text(result.bombs.toString(),
+                style: TextStyle(fontSize: 18, decorationColor: Colors.black))
+            : Image.asset(h2),
+      ),
+    ),
+    TableCell(
+      verticalAlignment: TableCellVerticalAlignment.middle,
+      child: Container(
+          alignment: Alignment.center,
+          height: Screen.height / splitFactor,
+          width: 32,
+          color: useAsHeading ? Colors.amber : Colors.amberAccent,
+          child: !useAsHeading
+            ? Text((result.accuracy*100).toStringAsFixed(2),
+                style: TextStyle(fontSize: 18, decorationColor: Colors.black))
+            : Image.asset(h3),
+    ),),
+    TableCell(
+      verticalAlignment: TableCellVerticalAlignment.middle,
+      child: Container(
+          alignment: Alignment.center,
+          height: Screen.height / splitFactor,
+          width: 32,
+          color: useAsHeading ? Colors.amber : Colors.amberAccent,
+          child: !useAsHeading
+            ? Text(result.timeNeeded.toStringAsFixed(2),
+                style: TextStyle(fontSize: 18, decorationColor: Colors.black))
+            : Image.asset(h4),
+    ),),
+    TableCell(
+      verticalAlignment: TableCellVerticalAlignment.middle,
+      child: Container(
+          alignment: Alignment.center,
+          height: Screen.height / splitFactor,
+          width: 32,
+          color: useAsHeading ? Colors.amber : Colors.amberAccent,
+          child: !useAsHeading
+            ? Text(result.pointsEarned.toString(),
+                style: TextStyle(fontSize: 18, decorationColor: Colors.black))
+            : Image.asset(h5),
+    ),),
+  ]);
 }

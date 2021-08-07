@@ -62,15 +62,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_effects:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: bf4114e3fafa829e63aab42a7ae5ae21c0e36222
-      url: "https://github.com/HitenDev/flutter_effects.git"
-    source: git
-    version: "0.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter

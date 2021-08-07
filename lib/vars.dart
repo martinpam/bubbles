@@ -34,7 +34,7 @@ class Movement {
 
 class GameVariables {
   static final double OUT_OF_RANGE = -4.5;
-  static final int REFRESH_INTERVAL_IN_MILLISECONDS = 10;
+  static final int REFRESH_INTERVAL_IN_MILLISECONDS = 5;
   static final bool debugIsOn = false;
 }
 
@@ -69,22 +69,55 @@ class LevelInfo {
   };
 
   static int getNrComponentsBySkill(int skill, double challengeFactor) {
-    return BASE_NR_COMPONENTS_CIRCLE + ((skill*challengeFactor)/ SKILL_PER_CIRCLE).floor();
+      
+      if (skill < SKILL_PER_CIRCLE*(1+0)) return BASE_NR_COMPONENTS_CIRCLE;
+      if (skill < SKILL_PER_CIRCLE*(1+1)) return BASE_NR_COMPONENTS_CIRCLE+1;
+      if (skill < SKILL_PER_CIRCLE*(1+2)) return BASE_NR_COMPONENTS_CIRCLE+2;
+      if (skill < SKILL_PER_CIRCLE*(1+3)) return BASE_NR_COMPONENTS_CIRCLE+3;
+      if (skill < SKILL_PER_CIRCLE*(1+4)) return BASE_NR_COMPONENTS_CIRCLE+4;
+      if (skill < SKILL_PER_CIRCLE*(1+5+0.7*1)) return BASE_NR_COMPONENTS_CIRCLE+5;
+      if (skill < SKILL_PER_CIRCLE*(1+6+0.7*2)) return BASE_NR_COMPONENTS_CIRCLE+6;
+      if (skill < SKILL_PER_CIRCLE*(1+7+0.7*3)) return BASE_NR_COMPONENTS_CIRCLE+7;
+      if (skill < SKILL_PER_CIRCLE*(1+5+0.7*6)) return BASE_NR_COMPONENTS_CIRCLE+8;
+      if (skill < SKILL_PER_CIRCLE*(1+6+0.7*9)) return BASE_NR_COMPONENTS_CIRCLE+9;
+      return 10; 
   }
   static double getSpeedBySkill(int skill, double challengeFactor, int nrComponents) {  
-    return BASE_SPEED_COMPONENTS + (skill*challengeFactor) % SKILL_PER_CIRCLE;
+    double newSpeed = BASE_SPEED_COMPONENTS;
+    for (int i = 0; i < skill; i++){
+      if (i < 100) {newSpeed+=1/3;}
+      else if (i < 200) {newSpeed+=1/5;}
+      else if (i < 300) {newSpeed+=1/8;}
+      else if (i < 400) {newSpeed+=1/10;}
+      else if (i < 500) {newSpeed+=1/12;}
+      else if (i < 600) {newSpeed+=1/14;}
+      else if (i < 800) {newSpeed+=1/20;}
+    }
+    return newSpeed;
   }
 
   static int getNrBombsBySkill(int skill, double challengeFactor) {
-    return BASE_NR_COMPONENTS_BOMB + ((skill*challengeFactor)/ SKILL_PER_BOMB).floor();
+    return BASE_NR_COMPONENTS_BOMB + ((skill)/ SKILL_PER_BOMB).floor();
   }
 }
 
-final double BASE_CIRCLE_CLEAR_TIME = 0.8;
+final double BASE_CIRCLE_CLEAR_TIME = 0.65;
 final int SKILL_PER_LEVEL = 25;
 final int BASE_NR_COMPONENTS_CIRCLE = 1;
 final double BASE_SPEED_COMPONENTS = 30;
-final int SKILL_PER_CIRCLE = 50;
+final int SKILL_PER_CIRCLE = 55;
 final int SKILL_PER_BOMB = 150;
 final int BASE_NR_COMPONENTS_BOMB =0;
+final double BASE_BOMB_CLEAR_TIME = 0.5;
+
+class RoundResult{
+  int circles;
+  int bombs;
+  double accuracy;
+  int pointsEarned;
+  double timeNeeded;
+
+  RoundResult(this.circles,this.bombs,this.accuracy,this.pointsEarned,this.timeNeeded);
+}
+
 

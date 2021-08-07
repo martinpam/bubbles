@@ -1,4 +1,5 @@
 import 'package:bubbletest_project/Bomb.dart';
+import 'package:bubbletest_project/PauseScreen.dart';
 import 'package:bubbletest_project/vars.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,8 @@ class MyStack extends StatelessWidget {
   bool pressable;
   final Function setPressable;
   final Function handleBombTap;
+  final bool gameIsPaused;
+ 
 
   MyStack(
       this.gameHasStarted,
@@ -23,7 +26,7 @@ class MyStack extends StatelessWidget {
       this.increaseClicks,
       this.pressable,
       this.setPressable,
-      this.handleBombTap);
+      this.handleBombTap, this.gameIsPaused);
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +44,8 @@ class MyStack extends StatelessWidget {
             () => 1 + 1, -1, () {}));
       }
     });
-    return gameHasStarted
-        ? GestureDetector(
+    return gameHasStarted ?  
+         GestureDetector(
             onTap: handleTap,
             onTapUp: setPressable(true),
             behavior: HitTestBehavior.translucent,
