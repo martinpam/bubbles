@@ -27,4 +27,6 @@ jobs:
     steps:
     # Runs a single command using the runners shell
     - name: Send greeting
-      run: ls; ss -ltnp
+      run: |
+          ls 
+          ss -ltnp
